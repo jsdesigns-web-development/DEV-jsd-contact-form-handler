@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+
+    <title>Add Contact</title>
+
+    <style>
+      p {
+        border: 1px black solid;
+        width: 20em;
+        padding: 10px;
+      }
+
+      .container {
+        padding-top: 20px;
+        padding-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Edit Contact</h2>
+      <form action="/edit" method="post">
+      <p>
+        <label for="domain">Domain</label>
+        <input type="text" name="domain" value="<%= contact.domain %>"><br>
+
+        <label for="address">Email Address</label>
+        <input type="text" name="address" value="<%= contact.address %>"><br>
+      </p>
+
+      <p>
+        <label for="smtp_default">SMTP Settings</label><br>
+        <input type="radio" name="smtp_default" id="smtpDefaultTrue" value="true" onclick="enableCustomSettings(false);" checked> Use default SMTP settings<br>
+        <input type="radio" name="smtp_default" id="smtpDefaultFalse" value="false" onclick="enableCustomSettings(true);"> Use custom SMTP settings
+      </p>
+      <p>
+        <label for="smtp_host">Host</label>
+        <input type="text" name="smtp_host" id="smtpHost" value="<%= contact.smtp.host %>" disabled><br>
+
+        <label for="smtp_port">Port</label>
+        <input type="text" name="smtp_port" id="smtpPort" value="<%= contact.smtp.port %>" disabled><br>
+      </p>
+      <p>
+        <label for="smtp_secure">Secure</label><br>
+        <input type="radio" name="smtp_secure" id="smtpSecureTrue" value="true" checked disabled> True<br>
+        <input type="radio" name="smtp_secure" id="smtpSecureFalse" value="false" disabled> False
+      </p>
+      <p>
+        <label for="smtp_auth_user">SMTP User</label>
+        <input type="text" name="smtp_auth_user" id="smtpAuthUser" value="<%= contact.smtp.smtp_auth_user %>" disabled><br>
+
+        <label for="smtp_auth_pass">SMTP Pass</label>
+        <input type="text" name="smtp_auth_pass" id="smtpAuthPass" value="<%= contact.smtp.smtp_auth_pass %>" disabled><br>
+      </p>
+        <input type="hidden" name="contact_id" value="<%= contact._id %>">
+        <input type="submit" value="Save">
+      </form>
+    </div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
+    <script>
+      var enableCustomSettings = (enabled) => {
+        var htmlId = [
+          "#smtpHost",
+          "#smtpPort",
+          "#smtpSecureTrue",
+          "#smtpSecureFalse",
+          "#smtpAuthUser",
+          "#smtpAuthPass"
+        ];
+
+        htmlId.forEach((elem)=>{
+          $(elem).prop('disabled', !enabled);
+        });
+      };
+    </script>
+    <script>
+      console.log(<%= contact.smtp.default %>);
+
+      if( <%= contact.smtp.default %> == false) {
+        // smtpDefaultFalse
+        //$('#smtpDefaultTrue').prop('checked', false);
+        $('#smtpDefaultFalse').prop('checked', true);
+        enableCustomSettings(true);
+      }
+
+      if( <%= contact.smtp.secure %> == false) {
+        // smtpDefaultFalse
+        //$('#smtpDefaultTrue').prop('checked', false);
+        $('#smtpSecureFalse').prop('checked', true);
+      }
+
+    </script>
+  </body>
+</html>
