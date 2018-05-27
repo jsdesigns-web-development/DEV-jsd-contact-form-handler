@@ -13,10 +13,10 @@
   <body>
     <div class="container">
       <h1>Domain Contacts</h1>
-      <p><a href="/add">add kitten</a></p>
+      <p><a href="/admin/add">add kitten</a></p>
       <p>
         <% contact.forEach((item)=>{ %>
-          <%= item.domain %> = <%= item.address[0] %> &nbsp;&nbsp; (<a href="/edit?contact_id=<%- item._id %>">edit</a> | <a href="/delete?contact_id=<%- item._id %>">delete</a>)<br>
+          <%= item.domain %> = <%= item.address[0] %> &nbsp;&nbsp; (<a href="/admin/edit?contact_id=<%- item._id %>">edit</a> | <a href="/admin/delete?contact_id=<%- item._id %>">delete</a>)<br>
         <% }); %>
       </p>
     </div>

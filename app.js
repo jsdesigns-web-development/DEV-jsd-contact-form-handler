@@ -43,6 +43,10 @@ var contactSchema = mongoose.Schema({
 var Contacts = mongoose.model('Contacts', contactSchema);
 
 app.get('/', function(req, res) {
+  res.redirect("/admin/");
+})
+
+app.get('/admin/', function(req, res) {
   //console.log(req.headers.host);
 
   Contacts.find(function (err, contact) {
@@ -53,11 +57,16 @@ app.get('/', function(req, res) {
 });
 
 // ADD contact
-app.get('/add', function(req, res) {
+app.get('/admin/login', function(req, res) {
+  res.render("login");
+})
+
+// ADD contact
+app.get('/admin/add', function(req, res) {
   res.render("add");
 })
 
-app.post('/add', function(req, res, next) {
+app.post('/admin/add', function(req, res, next) {
   // TODO: check if req.body.kitten_name already exists in db before adding to db
   //console.log(req.body.domain);
   //console.log(req.body.address);
@@ -81,13 +90,13 @@ app.post('/add', function(req, res, next) {
   newContact.save(function (err, newContact) {
     if (err) return console.error(err);
   });
-  res.redirect('/');
+  res.redirect('/admin/');
 
 })
 
 
 // EDIT contact
-app.get('/edit/', function(req, res) {
+app.get('/admin/edit/', function(req, res) {
   var contactId = req.query.contact_id;
   console.log(contactId);
 
@@ -97,7 +106,7 @@ app.get('/edit/', function(req, res) {
 
     if(err) {
       console.error(err);
-      res.redirect("/");
+      res.redirect("/admin/");
     } else {
       res.render("edit", {contact: contact});
       console.log(contact.domain + '+' + contact.address[0]);
@@ -106,7 +115,7 @@ app.get('/edit/', function(req, res) {
 
 })
 
-app.post('/edit', function(req, res, next) {
+app.post('/admin/edit', function(req, res, next) {
   var formValues = {
     domain: req.body.domain,
     address: [req.body.address],
@@ -126,10 +135,10 @@ app.post('/edit', function(req, res, next) {
   q.update({ $set: formValues }).update();
   q.update({ $set: formValues }).exec();
 
-  res.redirect('/');
+  res.redirect('/admin/');
 })
 
-app.get('/delete', function(req, res) {
+app.get('/admin/delete', function(req, res) {
   var contactId = req.query.contact_id;
   console.log(contactId);
 
@@ -140,7 +149,7 @@ app.get('/delete', function(req, res) {
       console.error(err)
     };
     console.log(contact.domain + " deleted.");
-    res.redirect("/");
+    res.redirect("/admin/");
   });
 })
 
