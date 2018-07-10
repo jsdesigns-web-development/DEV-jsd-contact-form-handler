@@ -7,23 +7,60 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css"href="/css/main.css">
 
     <title>Contact Mailer</title>
   </head>
   <body>
     <div class="container">
-      <h1>Domain Contacts</h1>
-      <p><a href="/admin/add">add kitten</a></p>
-      <p>
-        <% contact.forEach((item)=>{ %>
-          <%= item.domain %> = <%= item.address[0] %> &nbsp;&nbsp; (<a href="/admin/edit?contact_id=<%- item._id %>">edit</a> | <a href="/admin/delete?contact_id=<%- item._id %>">delete</a>)<br>
-        <% }); %>
-      </p>
+      <div class="alert alert-success alert-dismissible fade show" id="alert-bar-success" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Success!</strong> Message sent.
+      </div>
+      <div class="alert alert-danger alert-dismissible fade show" id="alert-bar" role="alert"></div>
+
+      <h1>Contact Us</h1>
+      <form action="/contact" method="post" id="contact-form">
+        <div class="form-group row">
+          <label for="name" class="col-sm-3 col-form-label">Name<span style="color:#D3461C;"> *</span></label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="name" name="name" placeholder="First Last" required>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="email" class="col-sm-3 col-form-label">Email<span style="color:#D3461C;"> *</span></label>
+          <div class="col-sm-8">
+            <input type="email" class="form-control" id="email" name="email" placeholder="jsmith@gmail.com" required>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="name" class="col-sm-3 col-form-label">Phone</label>
+          <div class="col-sm-8">
+            <input type="tel" class="form-control" id="phone" name="phone" placeholder="555-555-5555">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="message" class="col-sm-3 col-form-label">Message<span style="color:#D3461C;"> *</span></label>
+          <div class="col-sm-8">
+            <textarea type="text" class="form-control" id="message" name="message" placeholder="Your message..." rows="3" required></textarea>
+          </div>
+        </div>
+
+        <input type="hidden" name="domain" id="domain" value="">
+
+        <div class="form-group row">
+          <label for="message" class="col-sm-3 col-form-label"></label>
+          <div class="col-sm-8">
+              <input type="submit" value="Submit" class="btn btn-primary" id="submit-button" onClick="this.disabled=true; this.value='Sending…'; trySubmit();">
+          </div>
+        </div>
+      </form>
     </div>
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
+    <script src="/js/main.js"></script>
   </body>
 </html>

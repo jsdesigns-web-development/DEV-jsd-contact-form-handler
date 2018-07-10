@@ -1,10 +1,12 @@
 #!/usr/bin/env node
-const express = require('express')
+const express = require('express');
 var mongoose = require('mongoose');
-var bodyParser = require('body-parser')
-const ejs = require('ejs')
+var bodyParser = require('body-parser');
+const ejs = require('ejs');
+var mail = require('./lib/mail.js');
+var inputs = require('./lib/inputs.js');
 
-const app = express()
+const app = express();
 
 app.set("view engine", "ejs");
 app.use(express.static("public"));
@@ -43,115 +45,20 @@ var contactSchema = mongoose.Schema({
 var Contacts = mongoose.model('Contacts', contactSchema);
 
 app.get('/', function(req, res) {
-  res.redirect("/admin/");
-})
-
-app.get('/admin/', function(req, res) {
-  //console.log(req.headers.host);
-
-  Contacts.find(function (err, contact) {
-    if (err) return console.error(err);
-    res.render("index", {contact: contact});
-    })
-
+  res.render("index");
 });
 
-// ADD contact
-app.get('/admin/login', function(req, res) {
-  res.render("login");
-})
+app.post('/contact', function(req, res) {
+  if(inputs.validate(req.body)){
+    var mailSent = mail.transmit(req.body);
+  }
 
-// ADD contact
-app.get('/admin/add', function(req, res) {
-  res.render("add");
-})
-
-app.post('/admin/add', function(req, res, next) {
-  // TODO: check if req.body.kitten_name already exists in db before adding to db
-  //console.log(req.body.domain);
-  //console.log(req.body.address);
-
-  var newContact = new Contacts({
-    //host_detected: req.headers.host,
-    domain: req.body.domain,
-    address: [req.body.address],
-    smtp: {
-      default: req.body.smtp_default,
-      host: req.body.smtp_host,
-      port: req.body.smtp_port,
-      secure: req.body.smtp_secure,
-      smtp_auth_user: req.body.smtp_auth_user,
-      smtp_auth_pass: req.body.smtp_auth_pass
-    }
-  });
-  console.log(newContact);
-
-  // Save contact to db
-  newContact.save(function (err, newContact) {
-    if (err) return console.error(err);
-  });
-  res.redirect('/admin/');
-
-})
-
-
-// EDIT contact
-app.get('/admin/edit/', function(req, res) {
-  var contactId = req.query.contact_id;
-  console.log(contactId);
-
-  var query = Contacts.where({ _id: contactId });
-
-  query.findOne( function (err, contact) {
-
-    if(err) {
-      console.error(err);
-      res.redirect("/admin/");
-    } else {
-      res.render("edit", {contact: contact});
-      console.log(contact.domain + '+' + contact.address[0]);
-    }
-  });
-
-})
-
-app.post('/admin/edit', function(req, res, next) {
-  var formValues = {
-    domain: req.body.domain,
-    address: [req.body.address],
-    smtp: {
-      default: req.body.smtp_default,
-      host: req.body.smtp_host,
-      port: req.body.smtp_port,
-      secure: req.body.smtp_secure,
-      smtp_auth_user: req.body.smtp_auth_user,
-      smtp_auth_pass: req.body.smtp_auth_pass
-    }
-  };
-
-  console.log(req.body.domain + '=' + req.body.contact_id);
-  var q = Contacts.where({ _id: req.body.contact_id });
-  // this part needs expanding
-  q.update({ $set: formValues }).update();
-  q.update({ $set: formValues }).exec();
-
-  res.redirect('/admin/');
-})
-
-app.get('/admin/delete', function(req, res) {
-  var contactId = req.query.contact_id;
-  console.log(contactId);
-
-  var query = Contacts.where( { _id: contactId } );
-
-  query.findOneAndDelete( function (err, contact) {
-    if(err) {
-      console.error(err)
-    };
-    console.log(contact.domain + " deleted.");
-    res.redirect("/admin/");
-  });
-})
+  res.send(
+    {
+      sent: mailSent,
+      data: req.body
+    });
+});
 
 app.listen(3000, () =>
   console.log('Initialization Complete: server listening on port 3000')
