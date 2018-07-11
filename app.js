@@ -3,8 +3,12 @@ const express = require('express');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 const ejs = require('ejs');
+const fs = require('fs');
+
 var mail = require('./lib/mail.js');
 var inputs = require('./lib/inputs.js');
+var log = require('./lib/log.js');
+
 
 const app = express();
 
@@ -49,9 +53,19 @@ app.get('/', function(req, res) {
 });
 
 app.post('/contact', function(req, res) {
+  console.log(
+    "\n" +
+    "Request Hostname: " + req.hostname + "\n" +
+    "Request Origin: " + req.ip +
+    "\n"
+  );
+
   if(inputs.validate(req.body)){
     var mailSent = mail.transmit(req.body);
   }
+
+  var logEntry = log.generateEntry(req, mailSent);
+  log.saveLogEntry(logEntry);
 
   res.send(
     {

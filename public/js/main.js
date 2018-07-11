@@ -44,6 +44,8 @@ var lessThanTwoMinAgo = function(record) {
   return false;
 };
 
+sessionStorage.setItem("jsdcontact", location.hostname);
+
 var moreThanFivePerDay = function(record) {
   if(record == null) { return false; }
 
@@ -71,6 +73,8 @@ var trySubmit = function(){
   let alertDismissCode = "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>"
   let tooManyRecentlyMessage = alertDismissCode + "<strong>You just sent a message.</strong> Please wait a couple minutes before trying again.";
   let oneDayLimitMessage = alertDismissCode + "<strong>Message Limit Reached.</strong> Please wait 24 hours before trying again.";
+  let notValidEmailMessage = alertDismissCode + "<strong>Not A Valid Email Address.</strong> Please check it and try again.";
+
   let wasTwoMinAgo = lessThanTwoMinAgo(existingRecord);
   let fiveTimesToday = moreThanFivePerDay(existingRecord);
 
@@ -81,10 +85,16 @@ var trySubmit = function(){
       alertMessage = oneDayLimitMessage;
     }
   } else {
-    allowSend = true;
+    if(!validEmail(formInputs.email)) {
+      alertMessage = notValidEmailMessage;
+    } else {
+      allowSend = true;
+    }
   }
 
   if (allowSend) {
+    formInputs["session"] = sessionStorage.getItem("jsdcontact");
+    $('#session').val(formInputs.session);
     $('#contact-form').submit();
     saveRecord(existingRecord, formInputs);
     $("#alert-bar-success").show();
