@@ -53,12 +53,6 @@ app.get('/', function(req, res) {
 });
 
 app.post('/contact', function(req, res) {
-  console.log(
-    "\n" +
-    "Request Hostname: " + req.hostname + "\n" +
-    "Request Origin: " + req.ip +
-    "\n"
-  );
 
   if(inputs.validate(req.body)){
     var mailSent = mail.transmit(req.body);
