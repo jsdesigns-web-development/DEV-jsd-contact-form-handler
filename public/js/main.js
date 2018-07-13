@@ -95,7 +95,7 @@ var trySubmit = function(){
   if (allowSend) {
     formInputs["session"] = sessionStorage.getItem("jsdcontact");
     $('#session').val(formInputs.session);
-    $('#contact-form').submit();
+    submitFormData(formInputs);
     saveRecord(existingRecord, formInputs);
     $("#alert-bar-success").show();
   } else {
