@@ -52,12 +52,6 @@ app.get('/', function(req, res) {
   res.render("index");
 });
 
-app.post('/ajax', function(req, res) {
-  console.log(req.body);
-  res.send("ajax success");
-});
-
-
 app.post('/contact', function(req, res) {
 
   if(inputs.validate(req.body)){

@@ -21,7 +21,7 @@
       <div class="alert alert-danger alert-dismissible fade show" id="alert-bar" role="alert"></div>
 
       <h1>Contact Us</h1>
-      <form action="/contact" method="post" id="contact-form">
+      <form id="contact-form">
         <div class="form-group row">
           <label for="name" class="col-sm-3 col-form-label">Name:<span style="color:#D3461C;"> *</span></label>
           <div class="col-sm-8">
@@ -54,7 +54,7 @@
         <div class="form-group row">
           <label for="message" class="col-sm-3 col-form-label"></label>
           <div class="col-sm-8">
-              <input type="submit" value="Submit" class="btn btn-primary" id="submit-button" onClick="this.disabled=true; this.value='Sending…'; trySubmit();">
+              <input type="submit" value="Send" class="btn btn-primary" id="submit-button" onClick="this.disabled=true; this.value='Sending…'; trySubmit();">
           </div>
         </div>
       </form>
@@ -63,10 +63,9 @@
       src="http://code.jquery.com/jquery-3.3.1.min.js"
       integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
       crossorigin="anonymous">
-    </script>    
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
-    <script src="/js/ajax.js"></script>
     <script src="/js/validate.js"></script>
     <script src="/js/main.js"></script>
   </body>

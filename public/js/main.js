@@ -56,6 +56,29 @@ var moreThanFivePerDay = function(record) {
   return false;
 };
 
+var submitFormData = function(formInputs) {
+  $.post( "/contact", formInputs)
+  .done(function( response ) {
+    //alert( "Data Loaded: " + data );
+    console.log( response );
+  });
+};
+
+var resetForm = function(formInputs, action) {
+  setTimeout(function(){
+    $("#submit-button").val("Send");
+    document.getElementById("contact-form").reset();
+    $( "#submit-button" ).prop( "disabled", false );
+
+    if(action.insert_inputs) {
+      $("#name").val(formInputs.name)
+      $("#email").val(formInputs.email)
+      $("#phone").val(formInputs.phone)
+      $("#message").val(formInputs.message)
+      $("#domain").val(formInputs.domain)
+    }
+  }, 5000);
+};
 
 var trySubmit = function(){
   let formInputs = {
@@ -98,10 +121,12 @@ var trySubmit = function(){
     submitFormData(formInputs);
     saveRecord(existingRecord, formInputs);
     $("#alert-bar-success").show();
+    $("#submit-button").val("Sent");
+    resetForm(formInputs, { insert_inputs: false });
   } else {
     $("#submit-button").val("Uh-Oh!");
     $("#alert-bar").html(alertMessage);
     $("#alert-bar").show();
+    resetForm(formInputs, { insert_inputs: true });
   }
-
 };
