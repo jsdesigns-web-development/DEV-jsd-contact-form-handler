@@ -1,14 +1,17 @@
 #!/usr/bin/env node
 const express = require('express');
-var mongoose = require('mongoose');
-var bodyParser = require('body-parser');
 const ejs = require('ejs');
 const fs = require('fs');
+const uniqid = require('uniqid');
+
+var mongoose = require('mongoose');
+var bodyParser = require('body-parser');
 
 var mail = require('./lib/mail.js');
 var inputs = require('./lib/inputs.js');
 var log = require('./lib/log.js');
-
+var hash = require('./lib/hash.js');
+var limits = require('./lib/limits.js');
 
 const app = express();
 
@@ -48,24 +51,77 @@ var contactSchema = mongoose.Schema({
 // Compile Schema to Model
 var Contacts = mongoose.model('Contacts', contactSchema);
 
+
+// ROUTES
 app.get('/', function(req, res) {
   res.render("index");
 });
 
 app.post('/contact', function(req, res) {
+  var okToSend = false;
+  var inputsOK = false;
+  var limitsOK = false;
+  var msgSent = false;
+  var formData = req.body;
 
-  if(inputs.validate(req.body)){
-    var mailSent = mail.transmit(req.body);
+  var clientID = (req.body.clientID == "0") ? uniqid() : req.body.clientID;
+
+  // 0-A track status (init)
+  var getStatus = () => {
+    return {
+      "inputsOK": inputsOK,
+      "domainOK": domainOK,
+      "limitsOK": limitsOK,
+      "msgSent": msgSent,
+      "clientID": clientID
+    }
+  };
+
+  // 0-B validate domain
+  if(formData.session != formData.domain) {
+    res.send(getStatus());
+  } else {
+    domainOK = true;
   }
 
-  var logEntry = log.generateEntry(req, mailSent);
-  log.saveLogEntry(logEntry);
+  // 1) validate req inputs
+  if(!inputs.validated(formData)) {
+    res.send(getStatus());
+  } else {
+    inputsOK = true;
+  }
 
-  res.send(
-    {
-      sent: mailSent,
-      data: req.body
-    });
+  // 2) check against rule set (min, day, domain)
+    //hash inputs -> temp hash
+      // {"all": xxx, "email": xxx, "message": xxx, "timestamp": new Date()}
+  var tempHash = hash.hashifyInputs(formData);
+    //check hashes against ruleset
+    // if check passes -> save hashes
+  if(!limits.areOK(tempHash)) {
+    res.send(getStatus());
+  } else {
+    limitsOK = true;
+  }
+  // 3) lookup recipient email address in db
+  // 4) transmit data to recipient
+  // 5) log outcome
+  var logEntry = log.generateEntry(req, mailSent);
+  log.saveEntry(logEntry);
+
+  // 6) return result to client
+  res.send(getStatus());
+
+
+/*
+let okToSend = mail.isOkToSend(req.body);
+  if(inputs.validated(req.body) && okToSend[0]){
+    let mailSent = mail.transmit(req.body);
+  } else {
+    let mailSent = okToSend[0];
+    // also pass okToSend[1] outcomes
+  }
+*/
+
 });
 
 app.listen(3000, () =>
