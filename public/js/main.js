@@ -1,6 +1,16 @@
 $('#domain').val(location.hostname);
 
-var removeExpired = (record) => {
+var getClientID = function() {
+  let cID = localStorage.getItem("clientID");
+
+  if(cID == undefined) {
+    cID = "0";
+  }
+  return cID;
+};
+
+
+var removeExpired = function(record) {
   let validRecords = [];
   let rightNow = Date.now();
   let oneDay = 86400000;
@@ -81,13 +91,17 @@ var resetForm = function(formInputs, action) {
 };
 
 var trySubmit = function(){
+  var clientID = getClientID();
+  $('#clientID').val(clientID);
+
   let formInputs = {
-    name: $("#name").val(),
-    email: $("#email").val(),
-    phone: $("#phone").val(),
-    message: $("#message").val(),
-    domain: $("#domain").val(),
-    timestamp: Date.now()
+    "name": $("#name").val(),
+    "email": $("#email").val(),
+    "phone": $("#phone").val(),
+    "message": $("#message").val(),
+    "domain": $("#domain").val(),
+    "clientID": $('#clientID').val(),
+    "timestamp": Date.now()
   }
 
   let existingRecord = JSON.parse(localStorage.getItem("record"));
