@@ -32,8 +32,8 @@ router.post('/contact', function(req,res) {
   }
 
   // EMAIL FORM DATA TO RECIPIENT
-  /*
   var result = mailer.send();
+  /*
   */
 
   // LOG RESULTS
