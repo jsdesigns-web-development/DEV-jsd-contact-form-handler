@@ -5,25 +5,28 @@ const bodyParser = require("body-parser");
 
 const router = express.Router();
 const Mailer = require("../lib/");
-//const log = require('./lib/log.js');
+//const log = require('../lib/log.js');
 
 
 router.use(function timeLog(req, res, next) {
   next();
 });
 
-router.post('/contact', function(req,res) {
-  var mailer = new Mailer.init();
+router.post('/contact', function(req,res, next) {
+  console.log("message received")
+  console.log(req.body.domain);
+  var mailer = new Mailer.init(req.body);
 
+  /*
   // VALIDATE EMAIL
   let validEmail = mailer.validate(req.body);
   if (!validEmail[0]) { console.error(validEmail[1]) }
-
+  */
   // COMPOSE MESSAGE STRING
-  var messageTXT = mailer.composeMessage(req.body, "text");
-  var messageHTML = mailer.composeMessage(req.body, "html");
-  //console.log(messageTXT);
-  //console.log(messageHTML);
+  //var messageTXT = mailer.composeMessage(req.body, "text");
+  //var messageHTML = mailer.composeMessage(req.body, "html");
+  mailer.mailOptions.text = mailer.composeMessage(req.body, "text");
+  mailer.mailOptions.html = mailer.composeMessage(req.body, "html");
 
   // LOOKUP RECIPIENT
   var recipient = mailer.lookupRecipient(req.body.domain);
@@ -46,6 +49,7 @@ router.post('/contact', function(req,res) {
   /*
   console.log(result);
   */
+  res.send((result) ? 'message sent' : 'message failed. message not sent.');
 });
 
 module.exports = router;
