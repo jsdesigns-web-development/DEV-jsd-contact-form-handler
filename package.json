@@ -1,22 +1,24 @@
 {
-  "name": "test-db",
-  "version": "1.0.0",
-  "description": "experimenting with mongodb",
-  "main": "app.js",
+  "name": "contact-form-handler",
+  "version": "0.0.2",
+  "description": "Contact form handler for JSD websites",
+  "main": "server.js",
   "dependencies": {
     "body-parser": "^1.18.3",
     "dateformat": "^3.0.3",
     "ejs": "^2.6.1",
     "express": "^4.16.3",
-    "express-parameters": "^1.0.4",
-    "mongoose": "^5.1.1",
-    "uniqid": "^5.0.3"
+    "mongoose": "^5.2.7",
+    "nodemailer": "^4.6.7",
+    "nodemon": "^1.18.3",
+    "uniqid": "^5.0.3",
+    "validator": "^10.5.0"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "nodemon server",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "Brian Jason",
+  "license": "MIT"
 }
