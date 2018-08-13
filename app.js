@@ -21,11 +21,11 @@ app.use('/modules', express.static('node_modules'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false }));
 
-var dbServer = 'ds229690.mlab.com:29690/contact_form';
-var dbUsername = 'bjsd'; // env
-var dbPassword = 'iAN2I5s67Mme3tr6ni'; // env
+var dbServer = process.env.CONTACT_FORM_DB_ADDRESS;
+var dbUsername = process.env.CONTACT_FORM_DB_USER;
+var dbPassword = process.env.CONTACT_FORM_DB_PASS;
 
-mongoose.connect('mongodb://' + dbUsername + ':' + dbPassword + '@' + dbServer);
+mongoose.connect('mongodb://' + dbUsername + ':' + dbPassword + '@' + dbServer, { useNewUrlParser: true });
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
