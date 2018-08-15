@@ -6,7 +6,7 @@ const bodyParser = require("body-parser");
 const router = express.Router();
 const Database = require("../lib/db.js");
 const Mailer = require("../lib/");
-//const log = require('../lib/log.js');
+const Log = require('../lib/log.js');
 
 var db = new Database.contactsDB();
 var mailer = new Mailer.init(db);
@@ -32,9 +32,12 @@ router.post('/contact', function(req,res, next) {
 
     // EMAIL FORM DATA TO RECIPIENT
     var result = mailer.send(recipientEmailAddress);
-    /*
-    */
 
+    // LOG RESULTS
+    var logEntry = log.generateEntry(req, mailSent);
+    log.saveEntry(logEntry);
+
+    // SEND RESPONSE TO CLIENT
     res.send((result) ? ('Message sent to ' + recipientEmailAddress) : 'Message not sent.');
     //db.Contacts -- END
   });
@@ -60,7 +63,6 @@ router.post('/contact', function(req,res, next) {
   log.saveEntry(logEntry);
   */
 
-  // SEND RESPONSE TO CLIENT
   /*
   console.log(result);
   */
